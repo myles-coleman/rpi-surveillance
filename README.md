@@ -1,6 +1,6 @@
 # rpi-surveillance
 
-A Raspberry Pi-based surveillance system that records video, uploads it to an AWS S3 bucket, and allows you to view the footage through a simple web interface. This project uses **Svelte** for the front-end and **Express.js** for the back-end, with AWS S3 for video storage.
+A Raspberry Pi-based surveillance system that records video and stores it in an AWS S3 bucket. It uses Kubernetes to manage the applications, Terraform to set up the AWS resources, and Ansible to configure the Raspberry Pi. You can view the recorded footage on a simple web interface built with Svelte.
 
 ---
 

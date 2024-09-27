@@ -6,7 +6,7 @@
 		isRecording = true;
 		
 		try {
-			const response = await fetch('http://10.0.0.143:3000/video-url');
+			const response = await fetch('http://10.0.0.143:3000');
 			const data = await response.json();
 			videoUrl = data.url;
 		} catch (error) {

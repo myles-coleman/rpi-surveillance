@@ -11,14 +11,12 @@ services:
       - AWS_REGION
     restart: unless-stopped
 
-  # client:
-  #   container_name: client
-  #   build:
-  #     context: ./client
-  #   ports:
-  #     - 3000:3000
-  #   # depends_on:
-  #   #   - server
-  #   entrypoint: /bin/sh -c
-  #   command: ["npm run start"]
-  #   restart: unless-stopped
+  client:
+    container_name: client
+    build:
+      context: ./client
+    ports:
+      - 5173:5173
+    # depends_on:
+    #   - server
+    restart: unless-stopped

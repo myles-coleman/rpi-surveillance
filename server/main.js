@@ -25,7 +25,7 @@ const main = async ({ bucketName, key, filePath }) => {
     try {
         //record video
         await new Promise((resolve, reject) => {
-            exec('rpicam-vid --framerate 120 --width 1920 --height 1080 -o video.mp4 -t 3s --level 4.2 --denoise cdn_off -n', (error, stderr) => {
+            exec('rpicam-vid --framerate 60 --width 1280 --height 720 -o video.mp4 -t 7s', (error, stderr) => {
                 if (error) {
                     console.error(`Error recording video: ${stderr}`);
                     return reject(new Error('Failed to record video'));

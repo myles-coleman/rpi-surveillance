@@ -43,7 +43,7 @@ const main = async ({ bucketName, key, filePath }) => {
             Body: videoData,
         });
         const response = await client.send(putObjectCommand);
-        console.log(`File uploaded: ${response}`);
+        console.log(`Video uploaded: ${response}`);
 
         //generate signed URL
         const getObjectCommand = new GetObjectCommand({

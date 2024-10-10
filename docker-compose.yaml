@@ -1,0 +1,24 @@
+services:
+  server:
+    container_name: server
+    build:
+      context: ./server
+    ports:
+      - "3000:3000"
+    environment:
+      - AWS_ACCESS_KEY_ID
+      - AWS_SECRET_ACCESS_KEY
+      - AWS_REGION
+    restart: unless-stopped
+
+  # client:
+  #   container_name: client
+  #   build:
+  #     context: ./client
+  #   ports:
+  #     - 3000:3000
+  #   # depends_on:
+  #   #   - server
+  #   entrypoint: /bin/sh -c
+  #   command: ["npm run start"]
+  #   restart: unless-stopped

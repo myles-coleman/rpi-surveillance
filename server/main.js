@@ -6,7 +6,7 @@ const express = require('express');
 const cors = require('cors');
 const app = express();
 require('dotenv').config()
-const port = 3000;
+const port = 5000;
 
 const credentials = {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,

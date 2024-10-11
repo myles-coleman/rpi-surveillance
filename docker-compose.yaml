@@ -4,13 +4,14 @@ services:
     build:
       context: ./server
     ports:
-      - "3000:3000"
+      - 5000:5000
     environment:
       - AWS_ACCESS_KEY_ID
       - AWS_SECRET_ACCESS_KEY
       - AWS_REGION
-    # devices:
-    # - "/dev/video0:/dev/video0"
+    devices:
+      - /dev/video0:/dev/video0
+    privileged: true  
     restart: unless-stopped
 
   client:

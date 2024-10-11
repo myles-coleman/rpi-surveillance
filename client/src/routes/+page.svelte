@@ -25,7 +25,7 @@
 
 	<!-- display video -->
 	{#if videoUrl}
-	<video width="1280" height="720" controls>
+	<video width="640" height="480" controls>
 		<source src={videoUrl} type="video/mp4" />
 		<track kind="captions" />
 		Your browser does not support the video tag.

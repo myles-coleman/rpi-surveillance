@@ -3,6 +3,17 @@
 	let isRecording = false;
 	let serverDown = false;
 
+	pingServer();
+
+	async function pingServer() {
+		try {
+			await fetch('http://10.0.0.143:3000');
+		} catch (error) {
+			serverDown = true;
+			console.error('Error pinging server:', error);
+		}
+	}
+
 	async function recordVideo() {
 		isRecording = true;
 		try {
@@ -17,6 +28,7 @@
 			isRecording = false;
 		}
 	}
+
 </script>
 
 <main>
@@ -98,4 +110,5 @@
 
 <!-- TODO
 Make video object reload on new video
+Let user input server IP
 Add stream to page -->

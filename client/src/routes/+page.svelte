@@ -1,6 +1,7 @@
 <script>
 	let videoUrl;
 	let isRecording = false;
+	let serverDown = false;
 
 	async function recordVideo() {
 		isRecording = true;
@@ -8,7 +9,9 @@
 			const response = await fetch('http://10.0.0.143:3000');
 			const data = await response.json();
 			videoUrl = data.url;
+			serverDown = false;
 		} catch (error) {
+			serverDown = true;
 			console.error('Error fetching video URL:', error);
 		} finally {
 			isRecording = false;
@@ -21,15 +24,19 @@
 		{isRecording ? 'Recording...' : 'Record Video'}
 	</button>
 
-	{#if isRecording}
-        <div class="loading-icon"></div>
-    {/if}
-
 	{#if videoUrl}
-	<video width="640" height="480" controls>
-		<source src={videoUrl} type="video/mp4" />
-		<track kind="captions" />
-	</video>
+		<video width="640" height="480" controls>
+			<source src={videoUrl} type="video/mp4" />
+			<track kind="captions" />
+		</video>
+	{/if}
+
+	{#if serverDown}
+		<h1>Server is down</h1>
+	{/if}
+
+	{#if isRecording}
+		<div class="loading-icon"></div>
 	{/if}
 </main>
 
@@ -88,3 +95,7 @@
         animation: spin 1s linear infinite;
     }
 </style>
+
+<!-- TODO
+Make video object reload on new video
+Add stream to page -->

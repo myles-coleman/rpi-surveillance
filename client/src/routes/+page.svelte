@@ -1,10 +1,9 @@
 <script>
-	let videoUrl = '';
+	let videoUrl;
 	let isRecording = false;
 
 	async function recordVideo() {
 		isRecording = true;
-		
 		try {
 			const response = await fetch('http://10.0.0.143:3000');
 			const data = await response.json();
@@ -18,29 +17,33 @@
 </script>
 
 <main>
-	<!-- record video -->
 	<button on:click={recordVideo} disabled={isRecording}>
 		{isRecording ? 'Recording...' : 'Record Video'}
 	</button>
 
-	<!-- display video -->
+	{#if isRecording}
+        <div class="loading-icon"></div>
+    {/if}
+
 	{#if videoUrl}
 	<video width="640" height="480" controls>
 		<source src={videoUrl} type="video/mp4" />
 		<track kind="captions" />
-		Your browser does not support the video tag.
 	</video>
 	{/if}
 </main>
 
 <style>
+	* {
+        font-family: Arial, sans-serif;
+        box-sizing: border-box;
+    }
 	main {
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 	}
 	video {
-		margin-top: 20px;
 		border-radius: 8px;
 	}
 	button {
@@ -57,5 +60,31 @@
 	button:hover {
 		background-color: rgb(217, 217, 217);
 
+    }
+	.loading-icon {
+        width: 640px;
+        height: 480px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 24px;
+        color: #333;
+    }
+	@keyframes spin {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+    .loading-icon::before {
+        content: '';
+        border: 8px solid #f3f3f3;
+        border-top: 8px solid #000000;
+        border-radius: 50%;
+        width: 80px;
+        height: 80px;
+        animation: spin 1s linear infinite;
     }
 </style>

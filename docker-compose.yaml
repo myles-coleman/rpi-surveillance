@@ -1,18 +1,18 @@
 services:
-  server:
-    container_name: server
-    build:
-      context: ./server
-    ports:
-      - 3000:3000
-    environment:
-      - AWS_ACCESS_KEY_ID
-      - AWS_SECRET_ACCESS_KEY
-      - AWS_REGION
-    devices:
-      - /dev/video0:/dev/video0
-    privileged: true  
-    restart: unless-stopped
+  # server:
+  #   container_name: server
+  #   build:
+  #     context: ./server
+  #   ports:
+  #     - 3000:3000
+  #   environment:
+  #     - AWS_ACCESS_KEY_ID
+  #     - AWS_SECRET_ACCESS_KEY
+  #     - AWS_REGION
+  #   devices:
+  #     - /dev/video0:/dev/video0
+  #   privileged: true  
+  #   restart: unless-stopped
 
   client:
     container_name: client
@@ -20,6 +20,4 @@ services:
       context: ./client
     ports:
       - 5173:5173
-    # depends_on:
-    #   - server
     restart: unless-stopped

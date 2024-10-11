@@ -41,8 +41,21 @@
 	}
 	video {
 		margin-top: 20px;
+		border-radius: 8px;
 	}
 	button {
-		margin-bottom: 20px;
+		margin-top: 20px;
+		margin-bottom: 10px;
+		padding: 10px;
+		border: 1px solid #b5b5b5;
+		border-radius: 5px;
+        cursor: pointer;
+		background-color: rgb(236, 236, 236);
+		font-size: 1rem;
+		transition: background-color 0.2s ease;
 	}
+	button:hover {
+		background-color: rgb(217, 217, 217);
+
+    }
 </style>

@@ -2,7 +2,7 @@
 	let videoUrl;
 	let isRecording = false;
 	let serverDown = false;
-
+	let videoElement;
 	pingServer();
 
 	async function pingServer() {
@@ -21,6 +21,9 @@
 			const data = await response.json();
 			videoUrl = data.url;
 			serverDown = false;
+			if (videoElement) {
+				videoElement.load();
+			}
 		} catch (error) {
 			serverDown = true;
 			console.error('Error fetching video URL:', error);
@@ -37,7 +40,7 @@
 	</button>
 
 	{#if videoUrl}
-		<video width="640" height="480" controls>
+		<video bind:this={videoElement} width="640" height="480" controls>
 			<source src={videoUrl} type="video/mp4" />
 			<track kind="captions" />
 		</video>
@@ -108,7 +111,3 @@
     }
 </style>
 
-<!-- TODO
-Make video object reload on new video
-Let user input server IP
-Add stream to page -->

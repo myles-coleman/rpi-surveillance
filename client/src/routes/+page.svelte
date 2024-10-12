@@ -3,7 +3,7 @@
 	let isRecording = false;
 	let serverDown = false;
 	let videoElement;
-	pingServer();
+	//pingServer();
 
 	async function pingServer() {
 		try {

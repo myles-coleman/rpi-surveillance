@@ -3,11 +3,13 @@
 	let isRecording = false;
 	let serverDown = false;
 	let videoElement;
+	let serverIp = '';
+
 	//pingServer();
 
 	async function pingServer() {
 		try {
-			await fetch('http://10.0.0.143:3000');
+			await fetch(`http://${serverIp}:3000`);
 		} catch (error) {
 			serverDown = true;
 			console.error('Error pinging server:', error);
@@ -17,7 +19,7 @@
 	async function recordVideo() {
 		isRecording = true;
 		try {
-			const response = await fetch('http://10.0.0.143:3000');
+			const response = await fetch(`http://${serverIp}:3000`);
 			const data = await response.json();
 			videoUrl = data.url;
 			serverDown = false;
@@ -35,6 +37,8 @@
 </script>
 
 <main>
+	<input type="text" bind:value={serverIp} placeholder="Enter server IP address" />
+	
 	<button on:click={recordVideo} disabled={isRecording}>
 		{isRecording ? 'Recording...' : 'Record Video'}
 	</button>
@@ -108,6 +112,14 @@
         width: 80px;
         height: 80px;
         animation: spin 1s linear infinite;
+    }
+	input {
+        margin-top: 20px;
+        padding: 10px;
+        border: 1px solid #b5b5b5;
+        border-radius: 5px;
+        font-size: 1rem;
+        width: 300px;
     }
 </style>
 

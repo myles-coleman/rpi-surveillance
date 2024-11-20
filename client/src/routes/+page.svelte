@@ -1,25 +1,15 @@
 <script>
 	let videoUrl;
+	let streamUrl;
 	let isRecording = false;
 	let serverDown = false;
 	let videoElement;
 	let serverIp = '';
 
-	//pingServer();
-
-	async function pingServer() {
-		try {
-			await fetch(`http://${serverIp}:3000`);
-		} catch (error) {
-			serverDown = true;
-			console.error('Error pinging server:', error);
-		}
-	}
-
 	async function recordVideo() {
 		isRecording = true;
 		try {
-			const response = await fetch(`http://${serverIp}:3000`);
+			const response = await fetch(`http://${serverIp}:3000/record`);
 			const data = await response.json();
 			videoUrl = data.url;
 			serverDown = false;
@@ -34,21 +24,48 @@
 		}
 	}
 
+	async function fetchStream() {
+    try {
+        const response = await fetch(`http://${serverIp}:3000/stream`);
+        const data = await response.json();
+        streamUrl = data.streamUrl;
+        serverDown = false;
+        if (videoElement) {
+            videoElement.load();
+        }
+    } catch (error) {
+        serverDown = true;
+        console.error('Error fetching stream URL:', error);
+    }
+}
+
 </script>
 
 <main>
 	<input type="text" bind:value={serverIp} placeholder="Enter server IP address" />
-	
+
 	<button on:click={recordVideo} disabled={isRecording}>
 		{isRecording ? 'Recording...' : 'Record Video'}
 	</button>
 
+	<button on:click={fetchStream} disabled={isRecording}>
+		Start Live Stream
+	</button>
+
 	{#if videoUrl}
-		<video bind:this={videoElement} width="1280" height="720" controls>
+		<video bind:this={videoElement} width="1280" height="720" controls autoplay>
 			<source src={videoUrl} type="video/mp4" />
 			<track kind="captions" />
 		</video>
 	{/if}
+
+	{#if streamUrl}
+		<video bind:this={videoElement} controls autoplay>
+			<source src={streamUrl} type="application/x-mpegURL" />
+			<track kind="captions" />
+		</video>
+	{/if}
+	
 
 	{#if serverDown}
 		<h1>Server is down</h1>
@@ -122,4 +139,3 @@
         width: 300px;
     }
 </style>
-

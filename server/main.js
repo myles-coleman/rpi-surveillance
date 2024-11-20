@@ -67,12 +67,13 @@ async function recordAndUploadVideo(bucketName, key, filePath) {
 }
 
 // live stream
+app.use(cors());
 app.get('/stream', async (req, res) => {
     try {
         const client = new S3Client(config);
         const command = new GetObjectCommand({
             Bucket: "rpi-stream",
-            Key: "video/index-high.m3u8",
+            Key: "video/index-high_1.m3u8",
         });
         const streamUrl = await getSignedUrl(client, command, { expiresIn: 3600 });
         res.json({ streamUrl });
@@ -96,7 +97,6 @@ app.get("/record", async (req, res) => {
 	}
 });
 
-app.use(cors());
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });

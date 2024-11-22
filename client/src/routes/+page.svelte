@@ -35,20 +35,51 @@
 				alert("Please enter the server IP.");
 				return;
 			}
-			const streamUrl = `http://${serverIp}:3000/stream`;
+			
+			const timestamp = Date.now();
+			const streamUrl = `http://${serverIp}:3000/stream?t=${timestamp}`;
+
 			if (!videoElement) {
 				videoElement = document.createElement("video");
-				videoElement.width = 640;
-				videoElement.height = 360;
+				videoElement.width = 1280;
+				videoElement.height = 720;
 				videoElement.controls = true;
 				videoElement.autoplay = true;
 				videoElement.classList.add("video-stream");
 				document.querySelector("main").appendChild(videoElement);
 			}
+
 			if (Hls.isSupported()) {
-				const hls = new Hls({ debug: true });
+				const hls = new Hls({
+					debug: true,
+					liveSyncDurationCount: 3, // keeps the buffer close to the live edge
+					liveMaxLatencyDurationCount: 5, // prevents excessive latency
+					maxBufferLength: 30,
+					maxLiveSyncPlaybackRate: 1.1, // slight speed-up to catch up with live edge
+					lowLatencyMode: true,
+				});
 				hls.loadSource(streamUrl);
 				hls.attachMedia(videoElement);
+
+				hls.on(Hls.Events.ERROR, (event, data) => {
+					console.error("HLS.js error:", data);
+					if (data.fatal) {
+						switch (data.type) {
+							case Hls.ErrorTypes.NETWORK_ERROR:
+								console.log("A network error occurred. Retrying...");
+								hls.startLoad();
+								break;
+							case Hls.ErrorTypes.MEDIA_ERROR:
+								console.log("A media error occurred. Recovering...");
+								hls.recoverMediaError();
+								break;
+							default:
+								hls.destroy();
+								console.log("Could not recover. Destroying HLS.js instance.");
+								break;
+						}
+					}
+				});
 			} else {
 				alert("HLS is not supported in your browser.");
 			}

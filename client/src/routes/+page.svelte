@@ -1,4 +1,5 @@
 <script>
+	import Hls from 'hls.js';
 	let videoUrl;
 	let streamUrl;
 	let isRecording = false;
@@ -9,6 +10,10 @@
 	async function recordVideo() {
 		isRecording = true;
 		try {
+			if (!serverIp) {
+				alert("Please enter the server IP.");
+				return;
+			}
 			const response = await fetch(`http://${serverIp}:3000/record`);
 			const data = await response.json();
 			videoUrl = data.url;
@@ -25,19 +30,34 @@
 	}
 
 	async function fetchStream() {
-    try {
-        const response = await fetch(`http://${serverIp}:3000/stream`);
-        const data = await response.json();
-        streamUrl = data.streamUrl;
-        serverDown = false;
-        if (videoElement) {
-            videoElement.load();
-        }
-    } catch (error) {
-        serverDown = true;
-        console.error('Error fetching stream URL:', error);
-    }
-}
+		try {
+			if (!serverIp) {
+				alert("Please enter the server IP.");
+				return;
+			}
+			const streamUrl = `http://${serverIp}:3000/stream`;
+			if (!videoElement) {
+				videoElement = document.createElement("video");
+				videoElement.width = 640;
+				videoElement.height = 360;
+				videoElement.controls = true;
+				videoElement.autoplay = true;
+				videoElement.classList.add("video-stream");
+				document.querySelector("main").appendChild(videoElement);
+			}
+			if (Hls.isSupported()) {
+				const hls = new Hls({ debug: true });
+				hls.loadSource(streamUrl);
+				hls.attachMedia(videoElement);
+			} else {
+				alert("HLS is not supported in your browser.");
+			}
+			serverDown = false;
+		} catch (error) {
+			serverDown = true;
+			console.error("Error fetching stream URL or initializing playback:", error);
+		}
+	}
 
 </script>
 
@@ -58,14 +78,6 @@
 			<track kind="captions" />
 		</video>
 	{/if}
-
-	{#if streamUrl}
-		<video bind:this={videoElement} controls autoplay>
-			<source src={streamUrl} type="application/x-mpegURL" />
-			<track kind="captions" />
-		</video>
-	{/if}
-	
 
 	{#if serverDown}
 		<h1>Server is down</h1>

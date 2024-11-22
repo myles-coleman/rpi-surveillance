@@ -25,7 +25,7 @@ const s3Client = new S3Client(config);
 async function generateSignedUrl(bucketName, key) {
 	try {
 		const command = new GetObjectCommand({ Bucket: bucketName, Key: key });
-		return await getSignedUrl(s3Client, command, { expiresIn: 3600 });
+		return await getSignedUrl(s3Client, command, { expiresIn: 36000 });
 	} catch (error) {
 		console.error(`Error generating signed URL: ${error.message}`);
 		throw new Error("Failed to generate signed URL");
@@ -66,27 +66,59 @@ async function recordAndUploadVideo(bucketName, key, filePath) {
 	return await generateSignedUrl(bucketName, key);
 }
 
+// converts stream to string for endpoint
+async function streamToString(stream) {
+    const chunks = [];
+    for await (const chunk of stream) {
+        chunks.push(chunk);
+    }
+    return Buffer.concat(chunks).toString("utf-8");
+}
+
 // live stream
 app.use(cors());
 app.get('/stream', async (req, res) => {
     try {
-        const client = new S3Client(config);
+        const bucketName = "rpi-stream";
+        const playlistKey = "video/index-high_1.m3u8";
         const command = new GetObjectCommand({
-            Bucket: "rpi-stream",
-            Key: "video/index-high_1.m3u8",
+            Bucket: bucketName,
+            Key: playlistKey,
         });
-        const streamUrl = await getSignedUrl(client, command, { expiresIn: 3600 });
-        res.json({ streamUrl });
+        const playlistResponse = await s3Client.send(command);
+        const playlistBody = await streamToString(playlistResponse.Body);
+
+        console.log("Original Playlist Content:", playlistBody);
+
+        const lines = playlistBody.split("\n");
+        const updatedLines = await Promise.all(
+            lines.map(async (line) => {
+                if (line.endsWith(".ts")) {
+                    const tsCommand = new GetObjectCommand({
+                        Bucket: bucketName,
+                        Key: `video/${line}`,
+                    });
+                    const signedUrl = await getSignedUrl(s3Client, tsCommand, { expiresIn: 36000 });
+                    return signedUrl;
+                }
+                return line;
+            })
+        );
+
+        const updatedPlaylist = updatedLines.join("\n");
+
+        res.setHeader("Content-Type", "application/vnd.apple.mpegurl");
+        res.send(updatedPlaylist);
     } catch (error) {
-        console.error('Error generating stream URL:', error);
-        res.status(500).json({ error: 'Could not generate stream URL' });
+        console.error("Error generating signed URLs for stream:", error);
+        res.status(500).json({ error: "Could not generate signed playlist." });
     }
 });
 
 // recorded video
 app.get("/record", async (req, res) => {
 	try {
-		const bucketName = "rpi-surveillance";
+		const bucketName = "rpi-stream";
 		const key = "video.mp4";
 		const filePath = "video.mp4";
 

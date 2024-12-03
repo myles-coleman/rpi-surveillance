@@ -77,7 +77,7 @@ async function streamToString(stream) {
 
 // live stream
 app.use(cors());
-app.get('/stream', async (req, res) => {
+app.get('/generate-url', async (req, res) => {
     try {
         const bucketName = "rpi-stream";
         const playlistKey = "video/index-high_1.m3u8";

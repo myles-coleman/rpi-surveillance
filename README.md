@@ -9,7 +9,7 @@ A Raspberry Pi-based surveillance system that records video and stores it in an 
 - **client/**: Svelte web interface
 - **server/**: Express.js server on Raspberry Pi
 - **misc/**: Other related files
-- **infrastructure/**: Terraform and Ansible scripts
+- **infrastructure/**: Kubernetes manifests
 
 ## Notes
 

@@ -31,13 +31,10 @@
 
 	async function fetchStream() {
 		try {
-			if (!serverIp) {
-				alert("Please enter the server IP.");
-				return;
-			}
+			serverIp = '8ufxgqfuwk.execute-api.us-east-1.amazonaws.com';
 			
 			const timestamp = Date.now();
-			const streamUrl = `http://${serverIp}:3000/stream?t=${timestamp}`;
+			const streamUrl = `https://${serverIp}/generate-url`;
 
 			if (!videoElement) {
 				videoElement = document.createElement("video");
@@ -93,22 +90,22 @@
 </script>
 
 <main>
-	<input type="text" bind:value={serverIp} placeholder="Enter server IP address" />
+	<!-- <input type="text" bind:value={serverIp} placeholder="Enter server IP address" /> -->
 
-	<button on:click={recordVideo} disabled={isRecording}>
+	<!-- <button on:click={recordVideo} disabled={isRecording}>
 		{isRecording ? 'Recording...' : 'Record Video'}
-	</button>
+	</button> -->
 
 	<button on:click={fetchStream} disabled={isRecording}>
 		Start Live Stream
 	</button>
 
-	{#if videoUrl}
+	<!-- {#if videoUrl}
 		<video bind:this={videoElement} width="1280" height="720" controls autoplay>
 			<source src={videoUrl} type="video/mp4" />
 			<track kind="captions" />
 		</video>
-	{/if}
+	{/if} -->
 
 	{#if serverDown}
 		<h1>Server is down</h1>

@@ -1,0 +1,29 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: rpi-surveillance
+  namespace: rpi-surveillance
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`rpi-stream.cowlab.org`)
+      kind: Rule
+      services:
+        - name: rpi-surveillance
+          port: 5173
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: rpi-stream-cert
+  namespace: rpi-surveillance
+spec:
+  secretName: cowlab-staging-tls
+  issuerRef:
+    name: letsencrypt-staging
+    kind: ClusterIssuer
+  commonName: "*.cowlab.org"
+  dnsNames:
+  - "cowlab.org"
+  - "*.cowlab.org"

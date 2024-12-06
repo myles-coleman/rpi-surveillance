@@ -1,0 +1,13 @@
+kubeVersion: v1.28
+
+repositories:
+- name: traefik
+  url: https://traefik.github.io/charts
+
+releases:
+- name: traefik
+  namespace: traefik
+  chart: traefik/traefik
+  version: v33.1.0
+  values:
+  - values.yaml

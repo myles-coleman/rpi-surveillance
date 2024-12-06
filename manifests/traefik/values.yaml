@@ -1,0 +1,25 @@
+globalArguments:
+  - "--global.sendanonymoususage=false"
+  - "--global.checknewversion=false"
+
+additionalArguments:
+  - "--log.level=INFO"
+
+deployment:
+  enabled: true
+  replicas: 1
+
+ingressClass:
+  enabled: true
+  isDefaultClass: true
+        
+ingressRoute:
+  dashboard:
+    enabled: false
+
+service:
+  annotations:
+    service.beta.kubernetes.io/aws-load-balancer-type: nlb
+
+crd:
+  enabled: true

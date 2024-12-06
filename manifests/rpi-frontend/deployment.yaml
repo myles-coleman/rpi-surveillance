@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rpi-frontend
+  namespace: rpi-surveillance
+  labels:
+    app: rpi-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rpi-frontend
+  template:
+    metadata:
+      labels:
+        app: rpi-frontend
+    spec:
+      containers:
+        - name: rpi-frontend
+          image: beebecomebigbee/rpi-frontend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5173
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "250m"
+            limits:
+              memory: "256Mi"
+              cpu: "500m"

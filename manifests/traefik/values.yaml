@@ -9,9 +9,16 @@ deployment:
   enabled: true
   replicas: 1
 
-ingressClass:
-  enabled: true
-  isDefaultClass: true
+providers:
+  kubernetesCRD:
+    enabled: true
+    ingressClass: traefik-external
+    allowExternalNameServices: true
+  kubernetesIngress:
+    enabled: true
+    allowExternalNameServices: true
+    publishedService:
+      enabled: false
         
 ingressRoute:
   dashboard:

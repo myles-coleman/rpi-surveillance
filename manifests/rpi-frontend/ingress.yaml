@@ -3,6 +3,8 @@ kind: IngressRoute
 metadata:
   name: rpi-surveillance
   namespace: rpi-surveillance
+  annotations: 
+    kubernetes.io/ingress.class: traefik-external
 spec:
   entryPoints:
     - websecure

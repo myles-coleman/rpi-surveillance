@@ -1,16 +1,16 @@
 # Raspberry Pi Surveillance System
 
-A Raspberry Pi-based surveillance system that records video and stores it in an AWS S3 bucket. It uses Kubernetes to manage the applications, Terraform to set up the AWS resources, and Ansible to configure the Raspberry Pi. You can view the recorded footage on a simple web interface built with Svelte.
+This is a Raspberry Pi-based surveillance system that streams live video captured from a raspberry pi to a Svelte webpage hosted on Kubernetes. The Raspberry Pi sends a live video stream to AWS MediaLive, which converts the raw video into HLS (HTTP Live Streaming) format, generating video chunks and playlists. These HLS resources are stored in an AWS S3 bucket. To securely retrieve and stream the video, a Lambda function dynamically generates signed URLs for the HLS playlist and its associated chunks. These signed URLs are then exposed through an API Gateway, which serves as the backend endpoint for the frontend application.
 
 ---
 
 ## Directory Structure
 
 - **client/**: Svelte web interface
-- **server/**: Express.js server on Raspberry Pi
-- **misc/**: Other related files
 - **manifests/**: Kubernetes manifests
+- **misc/**: Other related files
+- **server/**: Express.js server on Raspberry Pi
 
-## Notes
+## Architecture Diagram
 
-- [CINS 490 Project Notes](https://docs.google.com/document/d/1ZRSwceDFP-vXhaeGEtF-lPOSiqJrt9ybZcrr_aWPE1s/edit?usp=sharing)
+![diagram](misc/diagram.png)

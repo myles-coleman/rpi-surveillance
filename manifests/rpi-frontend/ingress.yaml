@@ -14,6 +14,15 @@ spec:
       services:
         - name: rpi-surveillance
           port: 5173
+    - kind: Rule
+      match: Host(`rpi-stream.cowlab.org`) && Header(`Content-Type`, `application/grpc`)
+      priority: 11
+      services:
+        - name: rpi-surveillance
+          port: 5173
+          scheme: h2c
+  tls:
+    secretName: cowlab-production-tls
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate

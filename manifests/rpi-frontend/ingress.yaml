@@ -21,9 +21,9 @@ metadata:
   name: rpi-stream-cert
   namespace: rpi-surveillance
 spec:
-  secretName: cowlab-staging-tls
+  secretName: cowlab-production-tls
   issuerRef:
-    name: letsencrypt-staging
+    name: letsencrypt-production
     kind: ClusterIssuer
   commonName: "*.cowlab.org"
   dnsNames:
